@@ -9,6 +9,10 @@ body {
   align-content: center;
   height: 600px;
   width: 600px;
-  background-color: red;
+  background-color: grey;
+}
+
+#coloredBox{
+  background-color: aqua;
 }
 
