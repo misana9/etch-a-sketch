@@ -12,7 +12,17 @@ body {
   background-color: grey;
 }
 
-#coloredBox{
-  background-color: aqua;
+
+#colored{
+  background: white;
+}
+
+#createGrid{
+  display: inline;
+}
+
+#reset{
+  display:inline-block;
+  visibility: hidden;
 }
 
