@@ -3,17 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="javascript.js"defer></script>
+    <title>Etch A Sketch</title>
     <link rel="stylesheet" href="styles.css">
+    <script defer src="javascript.js"></script>
 </head>
 <body>
-    <label>Box size?</label>
-    <input id="item">
-    <button id="createGrid">Submit</button>
-    <button id="remake">Reset</button>
-    <button id="reset">Clear</button>
-    <div id="grid-container">
-    </div>
+    <header class="header">Etch-A-Sketch</header>
+    <main>
+        <div class="left">
+            <div class="sidebar">
+                <form autocomplete="off">
+                    <input type="color" value="#00000" id="color-picker" style="display: none" />
+                </form>
+                <button class="color" >COLOR</button>
+                <button class="random">RANDOMIZE</button>
+                <button class="eraser">ERASER</button>
+                <button class="clear">CLEAR</button>
+                <div class="slidecontainer">
+                    <form autocomplete="off">
+                        <input type = "range" min = "1" max = "60" value = "8" class="slider"
+                        >
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+                <div class="grid-container"></div>
+        </div>
+    </main>
+    <footer class="footer">Copyright @ misana9</footer>
 </body>
 </html>
