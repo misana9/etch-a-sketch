@@ -1,61 +1,128 @@
-const gridBox = document.getElementById("grid-container");
-const userInput = document.getElementById("item");
-const button = document.getElementById("createGrid");
-const resetDiv = document.getElementById("remake");
-let input;
+const header = document.querySelector(".header")
+const clearBtn = document.querySelector(".clear")
+const gridContainer = document.querySelector(".grid-container");
+let gridSize = document.createElement("h1");
 
-button.addEventListener("click",()=> {
-    input = userInput.value;
-    createGrids(input);
-    userInput.value = "";
-    button.style.visibility = "collapse";
+const slider = document.querySelector(".slider");
 
-    const reset = document.getElementById("reset");
-    reset.style.visibility = "visible";
-    reset.addEventListener("click",() =>{
-        const gridReset = document.querySelectorAll(".uncoloredBox");
-        gridReset.forEach((e) =>{
-            e.style.backgroundColor = "grey";
-        })
+let currentSize = 8;
+let currentColor = "#000000"
+let currentMode = "color";
+
+
+const clear = document.querySelector(".clear")
+
+function createGrid(x) {
+    gridContainer.innerHTML = ""; // Clear previous grid
+    let boxSize = 600 / x; // Don't subtract anything
+
+    for (let i = 0; i < x * x; i++) {
+        const grid = document.createElement("div")
+        grid.classList.add("grid-box")
+        grid.style.width = `${boxSize}px`
+        grid.style.height = `${boxSize}px`
+        gridContainer.appendChild(grid)
+    }
+    const grids = document.querySelectorAll(".grid-box")
+    grids.forEach(grid => {
+        ["mouseover", "mousedown"].forEach(event => 
+            grid.addEventListener(event, () => {
+                if(currentMode === "color"){
+                    if (isDrawing || event === "mousedown") {
+                        grid.style.backgroundColor = currentColor;
+                    }
+                }
+                else if(currentMode === "random"){
+                    if (isDrawing || event === "mousedown") {
+                        const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+                        const r = randomBetween(0, 255);
+                        const g = randomBetween(0, 255);
+                        const b = randomBetween(0, 255);
+                        const rgb = `rgb(${r},${g},${b})`;
+                        grid.style.backgroundColor = rgb;
+                    }
+                }
+            })
+        );
     })
-    userInput.addEventListener("input",() =>{
-        reset.style.visibility = "hidden";
-        button.style.visibility = "visible";
-    })
+}
+
+
+let sidebar = document.querySelector(".sidebar")
+slider.addEventListener("input", () => {
+    currentSize = slider.value
+    createGrid(currentSize)
+    sidebar.appendChild(gridSize)
+    gridSize.textContent = `${currentSize} x ${currentSize}`
+})
+
+let isDrawing = false;
+document.addEventListener("mousedown", () => {
+    isDrawing = true;
+})
+
+document.addEventListener("mouseup", () => {
+    isDrawing = false;
+})
+
+document.querySelector(".color").addEventListener("click", () => {
+    document.getElementById("color-picker").click();
 })
 
 
 
-function createGrids(input){
-let gridBoxSize = input * input;
-let boxSize = (600 / input)-2;
+clear.addEventListener("click",() =>{
+    const grids = document.querySelectorAll(".grid-box")
+    grids.forEach(grid => {
+        grid.style.backgroundColor = "white";
+  })
+})
 
-    for(let i=0;i <gridBoxSize;i++){
-        const grid = document.createElement("div");
-        grid.setAttribute("class", "uncoloredBox")
-        grid.style.height = `${boxSize}px`;
-        grid.style.width = `${boxSize}px`;
-        grid.style.flex = "0 0 auto"
-        grid.style.border = "solid";
-        grid.style.borderWidth = "1px"
-        gridBox.appendChild(grid);
+var color = document.querySelector("#color-picker")
 
-        const coloring = document.querySelectorAll(".uncoloredBox");
-        coloring.forEach(function(grid){
-            grid.addEventListener("mouseover",() =>{
-                grid.style.backgroundColor = "white";
-                })
-        })
+color.addEventListener("change",() => {
+    currentColor = color.value
+})
 
-        resetDiv.addEventListener("click",() => {
-            gridBox.removeChild(grid);
-            button.style.visibility = "visible";
-            reset.style.visibility = "hidden";
-        })
+
+
+var eraserBtn = document.querySelector(".eraser");
+eraserBtn.addEventListener("click",()=>{
+    if(randomize.classList.contains("selected") || colorBtn.classList.contains("selected")){
+        randomize.classList.remove("selected");
+        colorBtn.classList.remove("selected");
     }
-}
+    eraserBtn.classList.add("selected");
+    currentColor = "white";
+    currentMode = "color";
+})
+
+let colorBtn = document.querySelector(".color")
+colorBtn.addEventListener("click", () => {
+    if(randomize.classList.contains("selected") || eraserBtn.classList.contains("selected")){
+        randomize.classList.remove("selected");
+        eraserBtn.classList.remove("selected")
+    }
+    colorBtn.classList.add("selected")
+    currentColor = color.value
+    currentMode = "color";
+})
+
+let randomize = document.querySelector(".random")
+randomize.addEventListener("click", ()=>{
+    if(colorBtn.classList.contains("selected") || eraserBtn.classList.contains("selected") ){
+        colorBtn.classList.remove("selected")
+        eraserBtn.classList.remove("selected")
+    }
+    randomize.classList.add("selected")
+    currentMode = "random";
+})
 
 
+sidebar.appendChild(gridSize)
+gridSize.textContent = `${currentSize} x ${currentSize}`
+
+createGrid(currentSize)
 
 
 
